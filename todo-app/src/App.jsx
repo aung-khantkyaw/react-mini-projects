@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react"
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState();
+
+  const handleNewTask = (event) => {
+    setNewTask(event.target.value);
+  }
+
+  const addTask = () => {
+    if(newTask !== ""){
+      setTasks(tasks => [...tasks,newTask]);
+      setNewTask("");
+    }
+  }
+
+  const removeTask = (index) => {
+    setTasks(tasks.filter((_,i) => i !== index))
+  }
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="container">
+      <div className="input">
+        <input type="text" value={newTask} onChange={handleNewTask} placeholder="Enter a task"/>
+        <button className="btn btn-info" onClick={addTask}>
+          Add
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <hr />
+      <div className="tasks">
+        {tasks.length > 0 ? 
+          <ul>
+            {tasks.map((task, index) => <li key={index}>
+              <span className="task">{task}</span> 
+              <button className="btn btn-danger" onClick={() => removeTask(index)}>Delete</button>
+            </li>)}
+          </ul> : 
+          <span>No Task.</span>
+        }
+      </div>
+    </div>
   )
 }
 
